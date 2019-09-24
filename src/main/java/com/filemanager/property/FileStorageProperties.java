@@ -1,6 +1,5 @@
 package com.filemanager.property;
 
-import org.apache.tomcat.util.buf.UEncoder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "file")
