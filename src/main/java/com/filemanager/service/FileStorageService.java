@@ -26,11 +26,13 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class FileStorageService {
     private final Path fileStorageLocation;
+    private final FileGeneratorService fileGeneratorService;
     private Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
+    public FileStorageService(FileStorageProperties fileStorageProperties, FileGeneratorService fileGeneratorService) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDirectory())
                 .toAbsolutePath().normalize();
+        this.fileGeneratorService = fileGeneratorService;
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
@@ -75,7 +77,7 @@ public class FileStorageService {
 
     public void appendFileToHttpResponse(HttpServletResponse response) {
         try {
-            IOUtils.copy(transformStringIntoStream("text"), response.getOutputStream());
+            IOUtils.copy(transformStringIntoStream(fileGeneratorService.generateFile()), response.getOutputStream());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
